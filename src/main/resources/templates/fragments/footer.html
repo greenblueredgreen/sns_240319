@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html 
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/defaultLayout}">
-<section layout:fragment="content" class="contents d-flex justify-content-center">
-
-</section>
-
-<th:block layout:fragment="script">
-    <script>
-
-    </script>
-</th:block>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<footer class="bg-warning" th:fragment="footerFragment">
+		<small>Copyright © memo 2024</small>
+	</footer>
+</body>
+</html>
