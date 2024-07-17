@@ -13,6 +13,9 @@ import com.sns.common.EncryptUtils;
 import com.sns.user.bo.UserBO;
 import com.sns.user.entity.UserEntity;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @RequestMapping("/user")
 @RestController //data jsons반환
 public class UserRestController {
@@ -44,6 +47,14 @@ public class UserRestController {
 		return result;
 	}
 	
+	/**
+	 * 회원가입 화면
+	 * @param loginId
+	 * @param password
+	 * @param name
+	 * @param email
+	 * @return
+	 */
 	@PostMapping("/sign-up")
 	public Map<String, Object> signUp(
 			@RequestParam("loginId") String loginId,
@@ -66,4 +77,35 @@ public class UserRestController {
 		}
 		return result;
 	}
+
+	@PostMapping("/sign-in")
+	public Map<String, Object> signIn(
+			@RequestParam("loginId") String loginId,
+			@RequestParam("password") String password,
+			HttpServletRequest request){
+		
+		//password 해싱
+		String hashedPassword = EncryptUtils.md5(password);   
+		
+		//DB조회
+		UserEntity user = userBO.getUserEntityByLoginIdPassword(loginId, hashedPassword);
+		
+		//로그인 처리, 응답값
+		Map<String, Object> result = new HashMap<>();
+		if(user != null) {
+			//session에 사용자 정보 담기
+			HttpSession session = request.getSession();
+			session.setAttribute("userId", user.getId());
+			session.setAttribute("userloginId", user.getId());
+			session.setAttribute("userName", user.getName());
+			
+			result.put("code", 200);
+			result.put("result", "성공");	
+		} else {
+			result.put("code", 403);
+			result.put("error_message", "존재하지 않는 사용자입ㄴ디ㅏ.");	
+		}
+		return result;
+	}
+	
 }
