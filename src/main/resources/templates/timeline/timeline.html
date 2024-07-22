@@ -30,10 +30,10 @@
 			<div class="card border rounded mt-3">
 				<!-- 글쓴이, 더보기(삭제) -->
 				<div class="p-2 d-flex justify-content-between">
-					<span class="font-weight-bold">글쓴이</span>
+					<span class="font-weight-bold" th:text="${cardView.user.loginId}">글쓴이</span>
 					
 					<!-- 더보기 ...(로그인 된 사람과 글쓴이 정보 일치할 때 보이게) -->
-					<a href="#" class="more-btn">
+					<a th:if = "${session.userId == cardView}" href="#" class="more-btn">
 						<img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
 					</a>
 				</div>
@@ -63,9 +63,9 @@
 				<!-- 댓글 목록 -->
 				<div class="card-comment-list m-2">
 					<!-- 댓글들 -->
-					<div class="card-comment m-1">
-						<span class="font-weight-bold">댓글쓰니</span>
-						<span>댓글 내용임</span>
+					<div class="card-comment m-1" th:each = "commentView: ${cardView.commentList}">
+						<span class="font-weight-bold" th:text = "${commentView.user.loginId}">댓글쓰니</span>
+						<span th:text = "${commentView.comment.content}">댓글 내용임</span>
 						
 						<!-- 댓글 삭제(자신 댓글만 삭제 가능) -->
 						<a href="#" class="comment-del-btn">
