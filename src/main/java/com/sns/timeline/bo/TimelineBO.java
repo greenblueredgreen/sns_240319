@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.sns.comment.bo.CommentBO;
 import com.sns.comment.domain.CommentView;
+import com.sns.like.bo.LikeBO;
 import com.sns.post.bo.PostBO;
 import com.sns.post.entity.PostEntity;
 import com.sns.timeline.domain.CardView;
@@ -26,9 +27,12 @@ public class TimelineBO {
 	@Autowired
 	private CommentBO commentBO;
 	
+	@Autowired
+	private LikeBO likeBO;
+	
 	//input: x
 	//output: List<CardView>
-	public List<CardView> generateCardViewList(){
+	public List<CardView> generateCardViewList(int userId){
 		List<CardView> cardViewList = new ArrayList<>();
 		
 		// 글 목록을 가져오기 List<PostEntity>
@@ -38,20 +42,30 @@ public class TimelineBO {
 		// PostEntity => CardView 로 바꾸기 -> cardViewList에 넣기
 		// 글에 대한 반복문
 		for(PostEntity post : postList) {
+			
+			//CardView객체 생성
 			CardView card = new CardView();
 			
-			// 글 - 글 1개를 cardView에 설정
+			// 글 - 글 1개를 CardView의 필드 post에 설정
 			card.setPost(post); 
 			
 			// 글쓴이
 			//post.getUserId(); 글 번호 꺼내기 -> 그 글번호에 해당하는 글쓴이 user를 찾는다
 			UserEntity user = userBO.getUserEntityById(post.getUserId());
-			card.setUser(user);  //cardView에 글쓴이 넣기
+			card.setUser(user);  //cardView의 필드 user에 글쓴이 넣기
 			
 			// 댓글 N개   //글의 댓글 모두를 가져오는 과정 -> 글 아이디를 가져온다
 			List<CommentView> commentViewList = commentBO.generateCommentViewListByPostId(post.getId());
 			//댓글을 카드에 넣는다
-			card.setCommentList(commentViewList);
+			card.setCommentList(commentViewList);  //cardView의 필드 commentList에 설정
+			
+			// 좋아요 개수
+			int likeCount = likeBO.likeToggle(post.getId(), userId);
+			card.setLikeCount(likeCount);
+			
+			// 좋아요 여부 채우기
+			boolean filedLike = likeBO.likeToggle(post.getId(), userId);
+			card.setFilledLike(filedLike);
 			
 			// !!!!!!!!!!!!!!!!!!! 반드시 list에 넣는다
 			cardViewList.add(card);  // 그 cardViewList에 아까 넣은 정보가 있는 card(글쓴이, 글)를 넣는다.

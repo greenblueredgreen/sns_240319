@@ -78,6 +78,13 @@ public class UserRestController {
 		return result;
 	}
 
+	/**
+	 * 로그인
+	 * @param loginId
+	 * @param password
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/sign-in")
 	public Map<String, Object> signIn(
 			@RequestParam("loginId") String loginId,
@@ -103,7 +110,7 @@ public class UserRestController {
 			result.put("result", "성공");	
 		} else {
 			result.put("code", 403);
-			result.put("error_message", "존재하지 않는 사용자입ㄴ디ㅏ.");	
+			result.put("error_message", "존재하지 않는 사용자입니다.");	
 		}
 		return result;
 	}
