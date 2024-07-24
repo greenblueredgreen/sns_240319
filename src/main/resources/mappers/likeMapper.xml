@@ -2,7 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
- <mapper>
+ <mapper namespace="com.sns.like.mapper.LikeMapper">
+ 	
+ 	<select id="selectLikeCountByPostIdOrUserId" parameterType ="map" resultType="int">
+ 		SELECT
+ 			COUNT(*)
+ 		FROM 
+ 			`like`
+ 		WHERE
+ 			`postId` = #{postId}
+ 			<if test="userId != null">
+ 			AND `userId` = #{userId}
+ 			</if>
+ 	</select>
+ 
  	<select id="selectlikeToggle" resultType="map">
  		SELECT
  			*
@@ -12,6 +25,15 @@
  			`postId` = #{postId}
  			AND
  			`userId` = #{userId}
+ 	</select>
+ 	
+ 	<select id="selectLikeCountByPostId" parameterType="int" resultType="int">
+ 		SELECT
+ 			COUNT(*)
+ 		FROM 
+ 			`like`
+ 		WHERE
+ 			`postId` = #{postId}
  	</select>
  	
  	<insert id="insertLike" parameterType="map">
