@@ -15,16 +15,18 @@ import com.sns.user.entity.UserEntity;
 
 @Service
 public class CommentBO {
-	
-	@Autowired
-	private PostRepository postRepository;
-	
+
 	@Autowired
 	private CommentMapper commentMapper;
 	
 	@Autowired
 	private UserBO userBO;
 	
+	//input : postId, userId, content
+	//output : x
+	public void addComment(int postId, int userId, String content) {
+		commentMapper.insertComment(postId, userId, content);
+	}
 
 	public List<CommentView> generateCommentViewListByPostId(int postId){
 		
@@ -44,12 +46,16 @@ public class CommentBO {
 			
 			//댓글 쓰니
 			UserEntity user = userBO.getUserEntityById(comment.getUserId()); // 그 댓글의 userId가져오기 -> 그 아이디로 bo조회
-			commentView.setUser(user);  
+			commentView.setUser(user);
 			
 			//!!!!!!!!!commentViewList에 반드시 넣기
 			commentViewList.add(commentView);
 		}
 		
 		return commentViewList;
+	}
+	
+	public void deleteCommentById(int id) {
+		commentMapper.deleteCommentById(id);
 	}
 }

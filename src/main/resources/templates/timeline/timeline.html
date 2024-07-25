@@ -33,7 +33,8 @@
 					<span class="font-weight-bold" th:text="${cardView.user.loginId}">글쓴이</span>
 					
 					<!-- 더보기 ...(로그인 된 사람과 글쓴이 정보 일치할 때 보이게) -->
-					<a th:if = "${session.userId == cardView}" href="#" class="more-btn">
+					<!-- modal 붙임 -->
+					<a th:if = "${session.userId == cardView.post.userId}" href="#" class="more-btn" th:data-post-id="${cardView.post.postId}" data-toggle="modal" data-target="#modal">
 						<img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
 					</a>
 				</div>
@@ -84,6 +85,22 @@
 				</div> <!-- 댓글 끝 -->
 			</div> <!-- 카드 끝 -->
 		</div> <!-- 타임라인 박스 끝 -->
+		
+		<!-- 더보기 ... 에 넣음 -->
+		<!--  Modal : 부트스트랩 modal => 타임리프 레이아웃 때문에 section 태그 안쪽에 위치해야한다(section안에서만 동작)-->
+		<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<!-- modal-sm : 작은 모달창, modal-dialog-centered : 수직 기준 가운데 정렬 -->
+		  <div class="modal-dialog modal-sm modal-dialog-centered">
+		    <div class="modal-content text-center">
+		    	<div class="py-3">
+		    		<a href ="#" id="postDeleteBtn">삭제하기</a>
+		    	</div>
+		    	<div class="py-3 border-top">
+		    		<a href ="#" data-dismiss="modal">취소</a>
+		    	</div>
+		    </div>
+		  </div>
+		</div> <!-- modal 끝 -->
 	</div>
 </section>
 
@@ -252,6 +269,28 @@
 					alert("좋아요 하는데 실패했습니다");
 				}
 			});
+			
+			//더보기 ... a태그 클릭 => 모달 띄우기, 모달에 글 번호 심어놓기
+			// 더보기 클릭할 때 그 글번호를 가져와 모달에 글번호 넣기
+			$(".more-btn").on('click', function(e){
+				e.preventDefault(); //위로 올라감 방지
+				
+				let postId = $(this).data('post-id') //getting
+				//alert(postId);
+				
+				// 1개만 존재하는 modal을 재활용하기 위해 data-post-id를 심어놓는다
+				$("#modal").data('post-id', postId); //setting
+				//alert($("#modal").data('post-id'));
+				
+			});
+			
+			//모달 안에 있는 '삭제하기' 클릭
+			$("#postDeleteBtn").on('click', function(){
+				e.preventDefault();  // a 태그 위로 올라감 방지
+				let postId = $("#modal").data("post-id");
+				
+			});
+			
 		}); // --ready 함수 끝
     </script>
 </th:block>
