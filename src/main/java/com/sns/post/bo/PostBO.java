@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class PostBO {
-	
+	//주석
 	@Autowired
 	private PostRepository postRepository;
 	
